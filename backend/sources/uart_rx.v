@@ -10,9 +10,9 @@ module uart_rx #(
     input  wire                   serial_in,
     input  wire                   tick_16x,
 
-    output reg                    done_tick,
+    output reg                    data_ready_pulse,
     output wire                   error_frame,
-    output wire [7:0]   data_out
+    output wire [7:0]             data_out
 );
 
     // 1. Sincronizacion de la Entrada Asincrona: evita metaestabilidad
@@ -39,7 +39,7 @@ module uart_rx #(
     localparam [2:0] S_START_BIT = 3'd1; // Verificando el start bit
     localparam [2:0] S_DATA_BITS = 3'd2; // Recibiendo los bits de datos
     localparam [2:0] S_STOP_BIT  = 3'd3; // Verificando el stop bit
-    localparam [2:0] S_DONE      = 3'd4; // Estado transitorio para generar done_tick
+    localparam [2:0] S_DONE      = 3'd4; // Estado transitorio para generar data_ready_pulse
 
     // 3. Declaracion de Registros 
     //----------------------------------------------------------------
@@ -80,7 +80,7 @@ module uart_rx #(
         next_data_buffer = data_buffer_reg;
         next_data_out    = data_out_reg;
         next_error_frame = error_frame_reg;
-        done_tick        = 1'b0; // El pulso de salida es '0' por defecto
+        data_ready_pulse = 1'b0; // El pulso de salida es '0' por defecto
 
         case (state_reg)
             // Esperando un falling edge en la linea serial
@@ -154,7 +154,7 @@ module uart_rx #(
 
             S_DONE: begin
                 // Estado transitorio de 1 ciclo
-                done_tick  = 1'b1; // Activar el pulso de salida
+                data_ready_pulse = 1'b1; // Activar el pulso de salida
                 next_state = S_IDLE; // Volver a esperar la siguiente trama
             end
 
