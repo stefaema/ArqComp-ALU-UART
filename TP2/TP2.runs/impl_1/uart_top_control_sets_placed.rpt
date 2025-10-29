@@ -1,0 +1,92 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2025.1 (win64) Build 6140274 Thu May 22 00:12:29 MDT 2025
+| Date         : Wed Oct 29 03:31:29 2025
+| Host         : fer-win-pc running 64-bit major release  (build 9200)
+| Command      : report_control_sets -verbose -file uart_top_control_sets_placed.rpt
+| Design       : uart_top
+| Device       : xc7a35t
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Histogram
+3. Flip-Flop Distribution
+4. Detailed Control Set Information
+
+1. Summary
+----------
+
++----------------------------------------------------------+-------+
+|                          Status                          | Count |
++----------------------------------------------------------+-------+
+| Total control sets                                       |    14 |
+|    Minimum number of control sets                        |    14 |
+|    Addition due to synthesis replication                 |     0 |
+|    Addition due to physical synthesis replication        |     0 |
+| Unused register locations in slices containing registers |    39 |
++----------------------------------------------------------+-------+
+* Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
+** Run report_qor_suggestions for automated merging and remapping suggestions
+
+
+2. Histogram
+------------
+
++--------------------+-------+
+|       Fanout       | Count |
++--------------------+-------+
+| Total control sets |    14 |
+| >= 0 to < 4        |     2 |
+| >= 4 to < 6        |     2 |
+| >= 6 to < 8        |     1 |
+| >= 8 to < 10       |     5 |
+| >= 10 to < 12      |     1 |
+| >= 12 to < 14      |     0 |
+| >= 14 to < 16      |     0 |
+| >= 16              |     3 |
++--------------------+-------+
+* Control sets can be remapped at either synth_design or opt_design
+
+
+3. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |               2 |            1 |
+| No           | No                    | Yes                    |              26 |           10 |
+| No           | Yes                   | No                     |               0 |            0 |
+| Yes          | No                    | No                     |               0 |            0 |
+| Yes          | No                    | Yes                    |             103 |           25 |
+| Yes          | Yes                   | No                     |               6 |            1 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+4. Detailed Control Set Information
+-----------------------------------
+
++----------------------+---------------------------------------------------------------+---------------------------------------------------------------+------------------+----------------+--------------+
+|     Clock Signal     |                         Enable Signal                         |                        Set/Reset Signal                       | Slice Load Count | Bel Load Count | Bels / Slice |
++----------------------+---------------------------------------------------------------+---------------------------------------------------------------+------------------+----------------+--------------+
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_uart_tx/serial_out_i_1_n_0                      | RST_IBUF                                                      |                1 |              1 |         1.00 |
+|  CLK100MHZ_IBUF_BUFG |                                                               |                                                               |                1 |              2 |         2.00 |
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_uart_rx/tick_count_reg[3]_i_1_n_0               | RST_IBUF                                                      |                2 |              4 |         2.00 |
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_uart_tx/tick_counter_reg                        | RST_IBUF                                                      |                1 |              4 |         4.00 |
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_tx_controller/FSM_sequential_state_reg_reg[1]_0 | i_uart_ctrl/i_tx_controller/FSM_sequential_state_reg_reg[0]_0 |                1 |              6 |         6.00 |
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_uart_rx/next_data_out                           | RST_IBUF                                                      |                2 |              8 |         4.00 |
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_uart_rx/next_data_buffer                        | RST_IBUF                                                      |                2 |              8 |         4.00 |
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_uart_rx/next_bit_index_0                        | RST_IBUF                                                      |                4 |              8 |         2.00 |
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_rx_controller/op_b_reg[7]_i_1_n_0               | RST_IBUF                                                      |                1 |              8 |         8.00 |
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_rx_controller/op_a_reg[7]_i_1_n_0               | RST_IBUF                                                      |                1 |              8 |         8.00 |
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_uart_rx/E[0]                                    | RST_IBUF                                                      |                2 |             10 |         5.00 |
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_rx_controller/LED_OBUF[2]                       | RST_IBUF                                                      |                5 |             22 |         4.40 |
+|  CLK100MHZ_IBUF_BUFG | i_uart_ctrl/i_rx_controller/next_state__0[2]                  | RST_IBUF                                                      |                4 |             22 |         5.50 |
+|  CLK100MHZ_IBUF_BUFG |                                                               | RST_IBUF                                                      |               10 |             26 |         2.60 |
++----------------------+---------------------------------------------------------------+---------------------------------------------------------------+------------------+----------------+--------------+
+
+

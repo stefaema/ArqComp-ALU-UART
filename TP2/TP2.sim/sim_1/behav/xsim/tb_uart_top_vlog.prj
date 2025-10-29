@@ -1,0 +1,18 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  --include "../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef" \
+"../../../../TP2.srcs/sources_1/new/baud_generator.v" \
+"../../../../TP2.srcs/sources_1/imports/Documentos/ArqComp-UART/register.v" \
+"../../../../TP2.srcs/sources_1/new/rx_controller.v" \
+"../../../../TP2.srcs/sources_1/new/simple_alu.v" \
+"../../../../TP2.srcs/sources_1/new/tx_controller.v" \
+"../../../../TP2.srcs/sources_1/new/uart_controller.v" \
+"../../../../TP2.srcs/sources_1/imports/Documentos/ArqComp-UART/uart_rx.v" \
+"../../../../TP2.srcs/sources_1/new/uart_top.v" \
+"../../../../TP2.srcs/sources_1/imports/Documentos/ArqComp-UART/uart_tx.v" \
+"../../../../TP2.srcs/sim_1/new/tb_uart_top.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="stefa" Host="FER-WIN-PC" Pid="19576" HostCore="16" HostMemory="017102000128">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="stefa" Host="FER-WIN-PC" Pid="14680" HostCore="16" HostMemory="017102000128">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="stefa" Host="FER-WIN-PC" Pid="7672" HostCore="16" HostMemory="017102000128">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="stefa" Host="FER-WIN-PC" Pid="20900" HostCore="16" HostMemory="017102000128">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="stefa" Host="FER-WIN-PC" Pid="18300" HostCore="16" HostMemory="017102000128">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="stefa" Host="FER-WIN-PC" Pid="16260" HostCore="16" HostMemory="017102000128">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="stefa" Host="FER-WIN-PC" Pid="15576" HostCore="16" HostMemory="017102000128">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="stefa" Host="FER-WIN-PC" Pid="17576" HostCore="16" HostMemory="017102000128">
+    </Process>
+</ProcessHandle>
