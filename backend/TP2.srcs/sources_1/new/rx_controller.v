@@ -15,6 +15,7 @@ module rx_controller (
     // --- Salidas ---
     output wire [21:0] alu_data_out,       // Salida para el registro de la ALU: {Op[5:0], B[7:0], A[7:0]}
     output wire        reg_load_pulse,     // Pulso para cargar el registro de la ALU
+    output wire [2:0]  current_ctrl_state,     // Estado actual de la FSM
     output wire        display_cmd_pulse   // Pulso para iniciar la transmision del resultado
 );
 
@@ -62,7 +63,7 @@ module rx_controller (
             
             // La actualizacion del bus de datos de la ALU ocurre al transicionar a S_DONE
             if (next_state == S_DONE) begin
-                 alu_data_out_reg <= {op_code_reg[5:0], op_b_reg, op_a_reg};
+                 alu_data_out_reg <= {data_in[5:0], op_b_reg, op_a_reg};
             end
         end
     end
@@ -115,5 +116,5 @@ module rx_controller (
     // El pulso de carga solo se activa cuando estamos en el estado S_DONE
     assign reg_load_pulse    = (state_reg == S_DONE);
     assign display_cmd_pulse = display_cmd_pulse_comb;
-
+    assign current_ctrl_state = state_reg;
 endmodule

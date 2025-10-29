@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------------
 // MODULE: register (Sincronous Flip-Flop with Enable)
 // DESCRIPTION:
-//              Registro secuencial (Flip-Flop) parametrizable (WIDTH) con reset asincrono
-//              y habilitacion de carga sincrona (load_en).
+//              Registro secuencial (Flip-Flop) parametrizable (WIDTH) con reset asíncrono
+//              y habilitación de carga síncrona (load_en).
 //----------------------------------------------------------------------------------
 
 module register #(

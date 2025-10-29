@@ -6,7 +6,11 @@
 //                 transmision de resultados.
 //-----------------------------------------------------------------------------
 
-module uart_controller (
+module uart_controller #(
+    parameter BAUD_SELECTOR = 2'b00
+)
+
+ (
     // --- Puertos Globales ---
     input  wire        clk,
     input  wire        reset,
@@ -22,7 +26,9 @@ module uart_controller (
     
     // --- Interfaz con el Registro de la ALU (Salidas de RX) ---
     output wire [21:0] alu_data_out,
-    output wire        reg_load_pulse
+    output wire        reg_load_pulse,
+    output wire [2:0]  rx_current_state,
+    output wire [2:0]  tx_current_state
 );
 
     // 1. Senales Internas de Interconexion
@@ -50,11 +56,11 @@ module uart_controller (
 
     // Generador de Baud Rate (compartido)
     baud_rate_generator #(
-        .CLK_FREQ(100_000_000)
+        .CLK_FREQ(100_000_000),
+        .BAUD_SELECTOR(BAUD_SELECTOR)
     ) i_baud_gen (
         .clk(clk),
         .reset(reset),
-        .baud_selector(2'b00), // 9600 baud
         .tick_16x(tick_16x)
     );
 
@@ -77,7 +83,8 @@ module uart_controller (
         .data_in(rx_data_out),
         .alu_data_out(alu_data_out),
         .reg_load_pulse(reg_load_pulse),
-        .display_cmd_pulse(display_cmd_pulse)
+        .display_cmd_pulse(display_cmd_pulse),
+        .current_ctrl_state(rx_current_state)
     );
 
     // --- Instancias del Camino de Transmision ---
@@ -91,7 +98,8 @@ module uart_controller (
         .alu_overflow_flag(alu_overflow_flag),
         .tx_busy(tx_busy),
         .tx_data_out(tx_data_out),
-        .tx_start_pulse(tx_start_pulse)
+        .tx_start_pulse(tx_start_pulse),
+        .tx_current_state(tx_current_state)
     );
 
     uart_tx i_uart_tx (

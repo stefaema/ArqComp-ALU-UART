@@ -12,7 +12,7 @@ module uart_rx #(
 
     output reg                    data_ready_pulse,
     output wire                   error_frame,
-    output wire [7:0]             data_out
+    output wire [7:0]   data_out
 );
 
     // 1. Sincronizacion de la Entrada Asincrona: evita metaestabilidad
@@ -80,7 +80,7 @@ module uart_rx #(
         next_data_buffer = data_buffer_reg;
         next_data_out    = data_out_reg;
         next_error_frame = error_frame_reg;
-        data_ready_pulse = 1'b0; // El pulso de salida es '0' por defecto
+        data_ready_pulse        = 1'b0; // El pulso de salida es '0' por defecto
 
         case (state_reg)
             // Esperando un falling edge en la linea serial
@@ -154,8 +154,12 @@ module uart_rx #(
 
             S_DONE: begin
                 // Estado transitorio de 1 ciclo
-                data_ready_pulse = 1'b1; // Activar el pulso de salida
+                data_ready_pulse  = 1'b1; // Activar el pulso de salida
                 next_state = S_IDLE; // Volver a esperar la siguiente trama
+            end
+            
+            default: begin
+                next_state = S_IDLE;
             end
 
         endcase

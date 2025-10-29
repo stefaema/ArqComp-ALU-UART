@@ -10,12 +10,11 @@
 //-----------------------------------------------------------------------------
 
 module baud_rate_generator #(
-    parameter CLK_FREQ = 100_000_000   // Frecuencia del reloj para Basys3
+    parameter CLK_FREQ = 100_000_000,   // Frecuencia del reloj para Basys3
+    parameter BAUD_SELECTOR = 2'b00         // Selector para 9600 baud
 ) (
     input  wire        clk,            // Reloj del sistema
     input  wire        reset,          // Reset asincrono, activo en alto
-    input  wire [1:0]  baud_selector,  // Selector para la tasa de baudios
-
     output wire        tick_16x        // Pulso de 1 ciclo de clk a 16x Baud Rate
 );
     // Se pre-calculan los valores del contador para cada baud rate. La formula es (Frecuencia del Reloj / (Baud Rate * 16)) - 1.
@@ -31,7 +30,7 @@ module baud_rate_generator #(
 
     // Logica Combinacional para seleccionar el divisor basado en la entrada
     always @(*) begin
-        case (baud_selector)
+        case (BAUD_SELECTOR)
             2'b00:  divisor_reg = DIV_9600;
             2'b01:  divisor_reg = DIV_19200;
             2'b10:  divisor_reg = DIV_57600;
@@ -49,8 +48,8 @@ module baud_rate_generator #(
         // Si no hay reset, proceder con la logica normal
         end else begin
             // Si el baud rate cambia, reiniciar el contador
-            if (baud_selector != baud_selector_d) begin
-                baud_selector_d <= baud_selector;
+            if (BAUD_SELECTOR != baud_selector_d) begin
+                baud_selector_d <= BAUD_SELECTOR;
                 counter_reg     <= 0; 
             end
             // Logica principal del contador: incrementar o reiniciar

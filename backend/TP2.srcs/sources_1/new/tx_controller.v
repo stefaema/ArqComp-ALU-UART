@@ -18,16 +18,18 @@ module tx_controller (
 
     // --- Salidas ---
     output wire [7:0]  tx_data_out,       // Datos para el uart_tx
-    output wire        tx_start_pulse       // Pulso de inicio para el uart_tx
+    output wire        tx_start_pulse,       // Pulso de inicio para el uart_tx
+    output wire [2:0]  tx_current_state
 );
 
     // 1. Estados de la FSM
     //----------------------------------------------------------------
-    localparam [2:0] S_IDLE              = 3'd0; // Esperando comando de display
-    localparam [2:0] S_SEND_RESULT       = 3'd1; // Enviar el byte de resultado
-    localparam [2:0] S_WAIT_RESULT_SENT  = 3'd2; // Esperar a que TX termine el byte de resultado
-    localparam [2:0] S_SEND_FLAGS        = 3'd3; // Enviar el byte de flags
-    localparam [2:0] S_WAIT_FLAGS_SENT   = 3'd4; // Esperar a que TX termine el byte de flags
+    localparam [2:0] S_IDLE              = 3'd0; // Esperando comando
+    localparam [2:0] S_CAPTURE_DATA      = 3'd1; // Captura los datos de la ALU
+    localparam [2:0] S_SEND_RESULT       = 3'd2; // Inicia el envio del resultado
+    localparam [2:0] S_WAIT_RESULT_SENT  = 3'd3; // Espera a que termine el envio del resultado
+    localparam [2:0] S_SEND_FLAGS        = 3'd4; // Inicia el envio de los flags
+    localparam [2:0] S_WAIT_FLAGS_SENT   = 3'd5; // Espera a que termine el envio de los flags
 
     // 2. Declaracion de Registros
     //----------------------------------------------------------------
@@ -48,25 +50,31 @@ module tx_controller (
         end else begin
             state_reg <= next_state;
 
-            // Capturar los datos de la ALU solo al inicio de la secuencia
-            if (state_reg == S_IDLE && next_state == S_SEND_RESULT) begin
+            // Capturar los datos de la ALU al iniciar la secuencia de transmision.
+            // Esto asegura que los datos son estables antes de ser enviados.
+            if (next_state == S_CAPTURE_DATA) begin
                 result_reg <= alu_result;
                 flags_reg  <= {6'b0, alu_overflow_flag, alu_zero_flag};
             end
         end
     end
 
-    // 4. Logica Combinacional (Calculo de Siguiente Estado y Salidas)
+    // 4. Logica Combinacional (Calculo de Siguiente Estado)
     //----------------------------------------------------------------
     always @(*) begin
-        // Valores por defecto para evitar latches
         next_state = state_reg;
 
         case (state_reg)
             S_IDLE: begin
                 if (display_cmd_pulse && !tx_busy) begin
-                    next_state = S_SEND_RESULT;
+                    next_state = S_CAPTURE_DATA;
                 end
+            end
+            
+            S_CAPTURE_DATA: begin
+                // Estado transitorio para asegurar que los datos capturados
+                // esten disponibles en el siguiente ciclo.
+                next_state = S_SEND_RESULT;
             end
 
             S_SEND_RESULT: begin
@@ -95,13 +103,9 @@ module tx_controller (
         endcase
     end
     
-    // 5. Asignacion Final de Salidas
+    // 5. Asignacion de Salidas
     //----------------------------------------------------------------
-
-    // El pulso de inicio se genera en los estados de envio
     assign tx_start_pulse = (state_reg == S_SEND_RESULT) || (state_reg == S_SEND_FLAGS);
-    
-    // Seleccionar que dato enviar al transmisor segun el estado
     assign tx_data_out = (state_reg == S_SEND_RESULT) ? result_reg : flags_reg;
-
+    assign tx_current_state = state_reg;
 endmodule

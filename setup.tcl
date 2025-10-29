@@ -1,48 +1,51 @@
 # ============================================================================
-# Script Tcl para crear el proyecto de Vivado para el TP2
+# Script Tcl para ANADIR FUENTES a un proyecto de Vivado YA CREADO
+#
+# INSTRUCCIONES:
+# 1. Crea tu proyecto de Vivado manualmente (sin anadir fuentes).
+# 2. Abre la consola Tcl en Vivado (en la parte inferior de la GUI).
+# 3. Ejecuta este script escribiendo: source ./add_sources.tcl
+#    (Asegurate de que la ruta sea correcta desde donde Vivado se ejecuto).
 # ============================================================================
-# Se asume que este script se ejecuta desde la raiz del proyecto.
 
-# --- 1. Definicion de Variables del Proyecto ---
-set project_name "tp2_project"
-set project_dir "./vivado_project" ;# Directorio donde Vivado creara los archivos del proyecto
-set part_name "xc7a35tcpg236-1"   ;# Part number para la Basys3
+# Cambia el directorio de trabajo actual al directorio donde se encuentra este script.
+# Esto es CRUCIAL para que las rutas relativas (./backend/...) funcionen correctamente.
+cd [file dirname [info script]]
+puts "INFO: Directorio de trabajo cambiado a [pwd]"
 
-# --- 2. Creacion del Proyecto ---
-# Borra el directorio del proyecto si ya existe para una creacion limpia
-if { [file isdirectory $project_dir] } {
-    puts "INFO: Borrando proyecto existente en $project_dir"
-    file delete -force $project_dir
+# --- 1. Anadir Fuentes de Diseno (HDL) ---
+# Busca todos los archivos .v en la carpeta de fuentes.
+set design_sources [glob -nocomplain ./backend/sources/*.v]
+
+if { [llength $design_sources] > 0 } {
+    puts "INFO: Anadiendo fuentes de diseno: $design_sources"
+    # Anade los archivos encontrados al fileset de diseno (sources_1)
+    add_files -norecurse $design_sources
+} else {
+    puts "WARNING: No se encontraron archivos de diseno (.v) en ./backend/sources/"
 }
-puts "INFO: Creando proyecto '$project_name' en '$project_dir'"
-create_project $project_name $project_dir -part $part_name
 
-# --- 3. Anadir Fuentes de Diseno (HDL) ---
-# Usamos 'glob' para encontrar todos los archivos .v en el directorio de fuentes
-# Esto es automatico: si anades un nuevo archivo .v, sera incluido la proxima vez que corras el script.
-set design_sources [glob ./backend/sources/*.v]
-puts "INFO: Anadiendo fuentes de diseno: $design_sources"
-add_files -norecurse $design_sources
 
-# --- 4. Anadir Fuentes de Simulacion ---
-# Anadimos el testbench al fileset de simulacion 'sim_1'
-set sim_sources [glob ./backend/simulations/*.v]
-puts "INFO: Anadiendo fuentes de simulacion: $sim_sources"
-add_files -fileset sim_1 -norecurse $sim_sources
+# --- 2. Anadir Archivo de Constraints ---
+# Busca el archivo .xdc en la carpeta de constraints.
+set constr_file [glob -nocomplain ./backend/constraints/*.xdc]
 
-# --- 5. Anadir Archivo de Constraints ---
-set constr_file [glob ./backend/constraints/*.xdc]
-puts "INFO: Anadiendo archivo de constraints: $constr_file"
-add_files -fileset constrs_1 -norecurse $constr_file
+if { [llength $constr_file] > 0 } {
+    puts "INFO: Anadiendo archivo de constraints: $constr_file"
+    # Anade el archivo encontrado al fileset de constraints (constrs_1)
+    add_files -fileset constrs_1 -norecurse $constr_file
+} else {
+    puts "WARNING: No se encontro un archivo de constraints (.xdc) en ./backend/constraints/"
+}
 
-# --- 6. Configurar Propiedades del Proyecto ---
-# Especificar cual es el modulo 'top' de la jerarquia
+
+# --- 3. Configurar Propiedades y Actualizar ---
+# Es una buena practica re-establecer el top module y actualizar el orden
+# de compilacion despues de anadir archivos.
+puts "INFO: Estableciendo 'tp2_top' como modulo superior."
 set_property top tp2_top [current_fileset]
 
-# Actualizar el orden de compilacion por si acaso
+puts "INFO: Actualizando el orden de compilacion."
 update_compile_order -fileset sources_1
-update_compile_order -fileset sim_1
 
-puts "INFO: La creacion del proyecto ha finalizado."
-puts "INFO: Puedes abrir el proyecto con Vivado en la siguiente ruta:"
-puts "$project_dir/$project_name.xpr"
+puts "\nINFO: Script finalizado. Las fuentes y constraints han sido anadidos al proyecto actual."
